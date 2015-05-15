@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
-
-	public GameObject Enemy;
+	
 	public GameObject Player;
+	public List<Transform> Enemies;
 
-	public Transform EnemySpawnPoint;
 	public Transform PlayerSpawnPoint;
-
-	public int EnemyCount;
+	public List<Transform> EnemySpawnPoints;
+	
 	public int PlayerLife;
 
 	private bool quitting = false;
@@ -55,5 +55,12 @@ public class GameController : MonoBehaviour {
 
 	private void OnApplicationQuit() {
 		quitting = true;
+	}
+
+	private void SpawnEnemy() {
+		if (Enemies.Count == 0)
+			GameOver();
+
+		Instantiate(Enemy, EnemySpawnPoint.position, Quaternion.identity) as GameObject;
 	}
 }
