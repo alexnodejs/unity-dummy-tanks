@@ -23,7 +23,6 @@ public class PlayerTankController : MonoBehaviour {
 		if (Input.GetKeyUp(KeyCode.Space))
         {
             GameObject projectile = Instantiate(Projectile, Shoot.position, TankTransform.localRotation) as GameObject;
-            Debug.Log(projectile.transform.localRotation.eulerAngles);
             projectile.GetComponent<Rigidbody>().AddForce(projectile.transform.forward * 1000);
         }
 	}
