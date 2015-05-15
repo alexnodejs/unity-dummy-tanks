@@ -4,6 +4,7 @@ using System.Collections;
 public class GameController : MonoBehaviour {
 
 	public GameObject Enemy;
+
 	public GameObject Player;
 
 	public Transform EnemySpawnPoint;
