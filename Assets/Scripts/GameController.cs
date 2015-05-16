@@ -16,15 +16,19 @@ public class GameController : MonoBehaviour {
 	public RawImage youWin;
 	
 	public int PlayerLife;
-	
+
+	private GameObject spawnedPlayer;
 	private bool quitting = false;
 
 	// Use this for initialization
 	void Start () {
 		SpawnPlayer();
 		SpawnEnemy();
-		UpdateUI();
 		HideWinnerText();
+	}
+
+	void OnGUI() {
+		UpdateUI();
 	}
 
 	public void PlayerKilled () {
@@ -37,8 +41,6 @@ public class GameController : MonoBehaviour {
 			PlayerLife --;
 			SpawnPlayer();
 		}
-
-		UpdateUI();
 	}
 
 	public void EnemyKilled () {
@@ -46,8 +48,6 @@ public class GameController : MonoBehaviour {
 
 		if (GetActiveEnemiesCount() == 0)
 			SpawnEnemy();
-
-		UpdateUI();
 	}
 
 	private void SpawnEnemy() {
@@ -71,7 +71,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void SpawnPlayer() {
-		var spawnedPlayer = Instantiate(Player, PlayerSpawnPoint.position, Quaternion.identity) as GameObject;
+		spawnedPlayer = Instantiate(Player, PlayerSpawnPoint.position, Quaternion.identity) as GameObject;
 	}
 
 	private void UpdateUI() {
@@ -87,19 +87,30 @@ public class GameController : MonoBehaviour {
 		youWin.gameObject.SetActive(false);
 	}
 
+	private void CleanSpawnedObjects() {
+		foreach (var bonus in GameObject.FindGameObjectsWithTag("Bonus")) {
+			Destroy(bonus);
+		}
+
+		Enemies.Clear();
+		Destroy(spawnedPlayer);
+	}
+
 	private void Win() {
 		ShowWinnerText();
 		StartCoroutine(ChangeLevel());
 	}
 
 	private void GameOver() {
+		CleanSpawnedObjects();
 		Application.LoadLevel(0);
 	}
 
 	private IEnumerator ChangeLevel() {
 		yield return new WaitForSeconds(3f);
 
-		if (Application.loadedLevel < 1) {
+		if (Application.loadedLevel < 3) {
+			CleanSpawnedObjects();
 			Application.LoadLevel(Application.loadedLevel + 1);
 		} else {
 			GameOver();

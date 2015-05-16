@@ -9,7 +9,15 @@ public class PlayerTankController : MonoBehaviour {
     public Transform Shoot;
     public GameObject Projectile;
 	private bool quitting = false;
+	private float previousSpeed;
  
+	public void SetInvulnerability(float time) {
+		previousSpeed = Speed;
+		Speed += 35;
+		gameObject.tag = "Invulnerable";
+		StartCoroutine(DismissInvulnerability(time));
+	}
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -38,6 +46,13 @@ public class PlayerTankController : MonoBehaviour {
 			transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 5 * Time.deltaTime);
 
 		TankRigidbody.AddForce(direction * Speed);
+	}
+
+	private IEnumerator DismissInvulnerability(float time) {
+		yield return new WaitForSeconds(time);
+
+		Speed = previousSpeed;
+		gameObject.tag = "Player";
 	}
 
 	private void OnDestroy()

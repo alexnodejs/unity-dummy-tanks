@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour {
 	public GameObject Projectile;
 	public Transform ShootPosition;
 
+	public GameObject BonusArmor;
 	public GameObject BonusLife;
 	public int BonusChance;
 
@@ -46,7 +47,7 @@ public class EnemyController : MonoBehaviour {
 
         if(Physics.Raycast(ray, out hit, 3))
         {
-            if (hit.collider.CompareTag("Wall"))
+			if (hit.collider.CompareTag("Wall"))
 			{
 				var rotation = transform.rotation.eulerAngles;
 				rotation.y += 90;
@@ -65,10 +66,19 @@ public class EnemyController : MonoBehaviour {
 	{
 		if (quitting) return;
 
-		var random = Random.Range(0, 100);
-		if (BonusChance > random) {
-			GameObject bonus = Instantiate(BonusLife, transform.position, Quaternion.identity) as GameObject;
-		}
+		do {
+			var lifeRandom = Random.Range(0, 100);
+			if (BonusChance > lifeRandom) {
+				GameObject bonus = Instantiate(BonusLife, transform.position, Quaternion.identity) as GameObject;
+				break;
+			}
+			
+			var armorRandom = Random.Range(0, 100);
+			if (BonusChance > armorRandom) {
+				GameObject bonus = Instantiate(BonusArmor, transform.position, Quaternion.identity) as GameObject;
+				break;
+			}
+		} while(false);
 
 		GameObject controller = GameObject.Find("Game Controller");
 		controller.GetComponent<GameController>().EnemyKilled();
