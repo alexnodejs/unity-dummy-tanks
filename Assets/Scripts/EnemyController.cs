@@ -15,9 +15,13 @@ public class EnemyController : MonoBehaviour {
 	public Transform ShootPosition;
 
 	public GameObject BonusLife;
+	public GameObject BonusArmor;
 	public int BonusChance;
+	public int BonusArmorChance;
 
 	private bool quitting = false;
+ 
+
 
 	// Use this for initialization
 	void Start () {
@@ -66,8 +70,13 @@ public class EnemyController : MonoBehaviour {
 		if (quitting) return;
 
 		var random = Random.Range(0, 100);
-		if (BonusChance > random) {
-			GameObject bonus = Instantiate(BonusLife, transform.position, Quaternion.identity) as GameObject;
+
+//		if (BonusChance > random) {
+//			GameObject bonus = Instantiate(BonusLife, transform.position, Quaternion.identity) as GameObject;
+//		}
+		Debug.Log("bonus armor shoot");
+		if (BonusArmorChance > random) {
+			GameObject bonus = Instantiate(BonusArmor, transform.position, Quaternion.identity) as GameObject;
 		}
 
 		GameObject controller = GameObject.Find("Game Controller");

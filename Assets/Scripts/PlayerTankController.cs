@@ -8,8 +8,13 @@ public class PlayerTankController : MonoBehaviour {
     public Transform TankTransform;
     public Transform Shoot;
     public GameObject Projectile;
+
+	public float armorTimer;
 	private bool quitting = false;
- 
+	private bool armorOn = false;
+
+	private float armorCurrentTimer;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -19,6 +24,7 @@ public class PlayerTankController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+
 		MoveTank();
 		if (Input.GetKeyUp(KeyCode.Space))
         {
@@ -26,6 +32,32 @@ public class PlayerTankController : MonoBehaviour {
             Debug.Log(projectile.transform.localRotation.eulerAngles);
             projectile.GetComponent<Rigidbody>().AddForce(projectile.transform.forward * 1000);
         }
+
+		if (armorOn) {
+			Debug.Log("Armon true");
+			UpdateTurnArmorOn ();
+		}
+
+	}
+
+	void UpdateTurnArmorOn() {
+		 
+		Debug.Log("UpdateTurnArmorOn");
+		if (armorCurrentTimer > 0) 
+			armorCurrentTimer -= Time.deltaTime;
+
+		if (armorCurrentTimer < 0) 
+			armorCurrentTimer = 0;
+
+  		if (armorCurrentTimer == 0) 
+ 			armorOn = false;
+
+	}
+
+	public void TurnArmorOn() {
+		Debug.Log("TurnArmorOn");
+		armorOn = true;
+		armorCurrentTimer = armorTimer;
 	}
 
 	void MoveTank()
@@ -43,9 +75,19 @@ public class PlayerTankController : MonoBehaviour {
 
 	private void OnDestroy()
 	{
-		if (quitting) return;
+		if (quitting) 
+			return;
+
+		Debug.Log("destroy object");
+
+		//if (armorOn) return;  //does not work
+		if (!armorOn) {
+
+		Debug.Log("armor");
+
 		GameObject controller = GameObject.Find("Game Controller");
 		controller.GetComponent<GameController>().PlayerKilled();
+		}
 	}
 
 	private void OnApplicationQuit() {
